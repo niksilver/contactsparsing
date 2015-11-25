@@ -58,5 +58,16 @@ class ParserTest extends FunSpec with ShouldMatchers {
         parseOption(quotedField, "\"The rain in Spain...\"") should equal (Some("The rain in Spain..."))
       }
     }
+
+    it ("should accept quoted content with newlines") {
+      new TestParser {
+        val multiline =
+          """One, two,
+            |three, four,
+            |five, six.
+          """.stripMargin
+        parseOption(quotedField, "\"" + multiline + "\"") should equal (Some(multiline))
+      }
+    }
   }
 }
