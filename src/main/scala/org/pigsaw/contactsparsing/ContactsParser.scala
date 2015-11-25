@@ -16,4 +16,6 @@ class ContactsParser extends RegexParsers {
   def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote
 
   def field = quotedField | simpleField
+
+  def row = repsep(field, ",")
 }

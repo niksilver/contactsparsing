@@ -97,4 +97,13 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
   }
+
+  describe("row") {
+    it ("should accept a mix of fields on a single line") {
+      new TestParser {
+        parseOption(row, """Once,upon,a time,"a girl",named""") should
+          equal (Some(List("Once", "upon", "a time","a girl", "named")))
+      }
+    }
+  }
 }
