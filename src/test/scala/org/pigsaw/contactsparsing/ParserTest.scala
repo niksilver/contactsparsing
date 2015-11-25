@@ -50,4 +50,13 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
   }
+
+  describe("quotedField") {
+    it ("should accept quoted content with spaces") {
+      new TestParser {
+        parseOption(quotedField, "\"The cat sat on the mat\"") should equal (Some("The cat sat on the mat"))
+        parseOption(quotedField, "\"The rain in Spain...\"") should equal (Some("The rain in Spain..."))
+      }
+    }
+  }
 }

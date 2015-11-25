@@ -8,4 +8,6 @@ import scala.util.parsing.combinator.RegexParsers
 class ContactsParser extends RegexParsers {
 
   def simpleField = """[^,"]*""".r
+
+  def quotedField = "\"" ~> "[^\"]*".r <~ "\""
 }
