@@ -7,7 +7,11 @@ import scala.util.parsing.combinator.RegexParsers
   */
 class ContactsParser extends RegexParsers {
 
-  def simpleField = """[^,"]*""".r
+  val dQuote = "\""
+  val anythingWithoutDQuotes = "[^\"]*".r
+  val anythingWithoutCommaOrDQuote = """[^,"]*""".r
 
-  def quotedField = "\"" ~> "[^\"]*".r <~ "\""
+  def simpleField = anythingWithoutCommaOrDQuote
+
+  def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote
 }
