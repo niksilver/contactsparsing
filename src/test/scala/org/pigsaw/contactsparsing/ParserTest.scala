@@ -81,4 +81,20 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
   }
+
+  describe("field") {
+    it ("should accept a simple field") {
+      new TestParser {
+        parseOption(field, "hello") should equal(Some("hello"))
+        parseOption(field, "byeee") should equal(Some("byeee"))
+      }
+    }
+
+    it ("should accept a quoted field") {
+      new TestParser {
+        parseOption(field, "\"The cat sat on the mat\"") should equal (Some("The cat sat on the mat"))
+        parseOption(field, "\"The rain in Spain...\"") should equal (Some("The rain in Spain..."))
+      }
+    }
+  }
 }
