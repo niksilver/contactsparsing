@@ -105,5 +105,17 @@ class ParserTest extends FunSpec with ShouldMatchers {
           equal (Some(List("Once", "upon", "a time","a girl", "named")))
       }
     }
+
+    it ("should accept a row with a multi-line field") {
+      new TestParser {
+        val multiline =
+          """There was
+            |a young man
+            |from Dundee
+          """.stripMargin
+        parseOption(row, s"""one,"$multiline",three""") should
+          equal (Some(List("one", multiline, "three")))
+      }
+    }
   }
 }
