@@ -49,6 +49,16 @@ class ParserTest extends FunSpec with ShouldMatchers {
         parseOption(simpleField, """aye "!" aye""") should equal (None)
       }
     }
+
+    it ("should reject a string with a newline") {
+      new TestParser {
+        val multiline =
+          """one
+            |two
+            |three""".stripMargin
+        parseOption(simpleField, multiline) should equal (None)
+      }
+    }
   }
 
   describe("quotedField") {
@@ -115,6 +125,33 @@ class ParserTest extends FunSpec with ShouldMatchers {
           """.stripMargin
         parseOption(row, s"""one,"$multiline",three""") should
           equal (Some(List("one", multiline, "three")))
+      }
+    }
+  }
+
+  describe("file") {
+    it ("should parse a file with a single line") {
+      new TestParser {
+        val content = """one,two,three four,"five six",seven"""
+        parseOption(file, content) should equal (Some(
+          List(List("one", "two", "three four", "five six", "seven"))
+        ))
+      }
+    }
+
+    it ("should parse a file with multiline fields") {
+      new TestParser {
+        val content =
+          """one,two,three four,"Some numbers
+            |go over lines",six,seven
+            |a b c,d e f""".stripMargin
+        val brokenField =
+          """Some numbers
+            |go over lines""".stripMargin
+        parseOption(file, content) should equal (Some(
+          List(List("one", "two", "three four", brokenField, "six", "seven"),
+            List("a b c", "d e f"))
+        ))
       }
     }
   }

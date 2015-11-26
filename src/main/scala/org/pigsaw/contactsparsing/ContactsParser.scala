@@ -7,15 +7,19 @@ import scala.util.parsing.combinator.RegexParsers
   */
 class ContactsParser extends RegexParsers {
 
+  override val skipWhitespace = false
+
   val dQuote = "\""
   val anythingWithoutDQuotes = "[^\"]*".r
-  val anythingWithoutCommaOrDQuote = """[^,"]*""".r
+  val anythingWithoutCommaOrDQuoteOrNewline = """[^,"\n\r]*""".r
 
-  def simpleField = anythingWithoutCommaOrDQuote
+  def simpleField = anythingWithoutCommaOrDQuoteOrNewline
 
   def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote
 
   def field = quotedField | simpleField
 
   def row = repsep(field, ",")
+
+  def file = repsep(row, """[\n\r]+""".r)
 }
