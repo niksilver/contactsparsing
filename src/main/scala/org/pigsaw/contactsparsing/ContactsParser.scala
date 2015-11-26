@@ -15,7 +15,7 @@ class ContactsParser extends RegexParsers {
 
   def simpleField = anythingWithoutCommaOrDQuoteOrNewline
 
-  def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote
+  def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
 
   def field = quotedField | simpleField
 

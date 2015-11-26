@@ -69,14 +69,13 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
 
-    it ("should accept quoted content with newlines") {
+    it ("should accept quoted content with newlines and convert newlines to comma-spaces") {
       new TestParser {
         val multiline =
           """One, two,
             |three, four,
-            |five, six.
-          """.stripMargin
-        parseOption(quotedField, "\"" + multiline + "\"") should equal (Some(multiline))
+            |five, six.""".stripMargin
+        parseOption(quotedField, "\"" + multiline + "\"") should equal (Some("One, two,, three, four,, five, six."))
       }
     }
 
@@ -121,10 +120,9 @@ class ParserTest extends FunSpec with ShouldMatchers {
         val multiline =
           """There was
             |a young man
-            |from Dundee
-          """.stripMargin
+            |from Dundee""".stripMargin
         parseOption(row, s"""one,"$multiline",three""") should
-          equal (Some(List("one", multiline, "three")))
+          equal (Some(List("one", "There was, a young man, from Dundee", "three")))
       }
     }
   }
@@ -145,9 +143,7 @@ class ParserTest extends FunSpec with ShouldMatchers {
           """one,two,three four,"Some numbers
             |go over lines",six,seven
             |a b c,d e f""".stripMargin
-        val brokenField =
-          """Some numbers
-            |go over lines""".stripMargin
+        val brokenField = "Some numbers, go over lines"
         parseOption(file, content) should equal (Some(
           List(List("one", "two", "three four", brokenField, "six", "seven"),
             List("a b c", "d e f"))
