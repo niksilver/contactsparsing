@@ -13,12 +13,12 @@ class ContactsParser extends RegexParsers {
   val dQuote = "\""
   val dddQuote = "\"\"\""
   val anythingWithoutDQuotes = "[^\"]*".r
-  val anythingWithoutDDDQuotes = "((?!\"\"\").)*".r
+  val anythingWithoutDDDQuotes = "((?!\"\"\")(\r|\n|.))*".r
   val anythingWithoutCommaOrDQuoteOrNewline = """[^,"\n\r]*""".r
 
   def simpleField = anythingWithoutCommaOrDQuoteOrNewline
 
-  def tripleQuotedField = dddQuote ~> anythingWithoutDDDQuotes <~ dddQuote
+  def tripleQuotedField = dddQuote ~> anythingWithoutDDDQuotes <~ dddQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
 
   def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
 

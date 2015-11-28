@@ -105,6 +105,16 @@ class ParserTest extends FunSpec with ShouldMatchers {
         parseOption(tripleQuotedField, "\"\"\"The rain in Spain\"...\"\"\"") should equal(Some("The rain in Spain\"..."))
       }
     }
+
+    it ("should accept triple-quoted content with newlines and convert newlines to comma-spaces") {
+      new TestParser {
+        val multiline =
+          """One, two,
+            |three, four,
+            |five, six.""".stripMargin
+        parseOption(tripleQuotedField, "\"\"\"" + multiline + "\"\"\"") should equal (Some("One, two,, three, four,, five, six."))
+      }
+    }
   }
 
   describe("field") {
