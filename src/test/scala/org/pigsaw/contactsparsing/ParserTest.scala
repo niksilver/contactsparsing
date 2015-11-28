@@ -91,6 +91,22 @@ class ParserTest extends FunSpec with ShouldMatchers {
     }
   }
 
+  describe("tripleQuotedField") {
+    it("should accept quoted content with spaces") {
+      new TestParser {
+        parseOption(tripleQuotedField, "\"\"\"The cat sat on the mat\"\"\"") should equal(Some("The cat sat on the mat"))
+        parseOption(tripleQuotedField, "\"\"\"The rain in Spain...\"\"\"") should equal(Some("The rain in Spain..."))
+      }
+    }
+
+    it("should accept quoted content with quotes") {
+      new TestParser {
+        parseOption(tripleQuotedField, "\"\"\"The cat sa\"t on the mat\"\"\"") should equal(Some("The cat sa\"t on the mat"))
+        parseOption(tripleQuotedField, "\"\"\"The rain in Spain\"...\"\"\"") should equal(Some("The rain in Spain\"..."))
+      }
+    }
+  }
+
   describe("field") {
     it ("should accept a simple field") {
       new TestParser {
@@ -103,6 +119,13 @@ class ParserTest extends FunSpec with ShouldMatchers {
       new TestParser {
         parseOption(field, "\"The cat sat on the mat\"") should equal (Some("The cat sat on the mat"))
         parseOption(field, "\"The rain in Spain...\"") should equal (Some("The rain in Spain..."))
+      }
+    }
+
+    it ("should accept a triple-quoted field") {
+      new TestParser {
+        parseOption(field, "\"\"\"The cat sa\"t on the mat\"\"\"") should equal (Some("The cat sa\"t on the mat"))
+        parseOption(field, "\"\"\"The rain in Spain\"...\"\"\"") should equal (Some("The rain in Spain\"..."))
       }
     }
   }
@@ -148,6 +171,21 @@ class ParserTest extends FunSpec with ShouldMatchers {
           List(List("one", "two", "three four", brokenField, "six", "seven"),
             List("a b c", "d e f"))
         ))
+      }
+    }
+  }
+
+  describe("output") {
+    it ("should output file contents as a flattened string") {
+      new TestParser {
+        val content =
+          """one,two,three four,"Some numbers
+            |go over lines",six,seven
+            |a b c,d e f""".stripMargin
+        val brokenField = "Some numbers, go over lines"
+        output(content) should equal (
+          """"one","two","three four","Some numbers, go over lines","six","seven"
+             |"a b c","d e f"""".stripMargin)
       }
     }
   }
