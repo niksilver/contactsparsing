@@ -86,6 +86,34 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
 
+    it ("should accept quoted content with double-double quotes at the start") {
+      new TestParser {
+        val text = "\"\"Here is a double-double quote"
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"\"Here is a double-double quote"))
+      }
+    }
+
+    it ("should accept quoted content with double-double quotes at the end") {
+      new TestParser {
+        val text = "Here is a double-double quote\"\""
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here is a double-double quote\"\""))
+      }
+    }
+
+    it ("should accept quoted content which is just two double-double quotes") {
+      new TestParser {
+        val text = "\"\"\"\""
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"\"\"\""))
+      }
+    }
+
+    it ("should reject quoted content which is just an odd number of double quotes") {
+      new TestParser {
+        val text = "\"\"\"\"\""
+        parseOption(quotedField, "\"" + text + "\"") should equal (None)
+      }
+    }
+
     it ("should reject multiline content with double quotes") {
       new TestParser {
         val multiline =
