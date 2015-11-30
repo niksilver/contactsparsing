@@ -18,11 +18,11 @@ class ContactsParser extends RegexParsers {
 
   def simpleField = anythingWithoutCommaOrDQuoteOrNewline
 
-  def tripleQuotedField = dddQuote ~> anythingWithoutDDDQuotes <~ dddQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
+  //def tripleQuotedField = dddQuote ~> anythingWithoutDDDQuotes <~ dddQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
 
   def quotedField = dQuote ~> anythingWithoutDQuotes <~ dQuote ^^ { _.replaceAll("[\n\r]+", ", ") }
 
-  def field = tripleQuotedField | quotedField | simpleField
+  def field = /*tripleQuotedField |*/ quotedField | simpleField
 
   def row = repsep(field, ",")
 
@@ -43,7 +43,7 @@ class ContactsParser extends RegexParsers {
 object ContactsParser {
   def main(args: Array[String]): Unit = {
     val parser = new ContactsParser
-    val content = Source.fromFile("google.csv", "UTF-16").mkString
+    val content = Source.fromFile("google13.csv", "UTF-16").mkString
     val out = parser.output(content)
     println(out)
   }
