@@ -187,6 +187,19 @@ class ParserTest extends FunSpec with ShouldMatchers {
     }
   }
 
+  describe("flatten") {
+    it ("should filter out empty fields") {
+      new TestParser {
+        val struct = List(List("One", "Two", "Three"),
+          List("Four", "", "Six"))
+        var wanted =
+          """"One","Two","Three"
+            |"Four","Six"""".stripMargin
+        flatten(struct) should equal (wanted)
+      }
+    }
+  }
+
   describe("output") {
     it ("should output file contents as a flattened string") {
       new TestParser {

@@ -1,5 +1,7 @@
 package org.pigsaw.contactsparsing
 
+import java.io.PrintWriter
+
 import scala.io.Source
 import scala.util.parsing.combinator.RegexParsers
 
@@ -11,7 +13,6 @@ class ContactsParser extends RegexParsers {
   override val skipWhitespace = false
 
   val dQuote = "\""
-  val dddQuote = "\"\"\""
   val anythingWithoutCommaOrDQuoteOrNewline = """[^,"\n\r]*""".r
   val anythingWithoutIsolatedQuotes = """((\"\")|[^\"])*""".r
 
@@ -31,9 +32,9 @@ class ContactsParser extends RegexParsers {
     case failure: NoSuccess => "Oops: " + failure
   }
 
-  private def flatten(out: List[List[String]]): String = {
+  def flatten(out: List[List[String]]): String = {
     def quoted(f: String) = "\"" + f + "\""
-    def toRow(li: List[String]) = (li map quoted).mkString(",")
+    def toRow(li: List[String]) = li.filter(_.nonEmpty).map(quoted).mkString(",")
     (out map toRow).mkString(System.lineSeparator)
   }
 }
@@ -41,8 +42,11 @@ class ContactsParser extends RegexParsers {
 object ContactsParser {
   def main(args: Array[String]): Unit = {
     val parser = new ContactsParser
-    val content = Source.fromFile("google13.csv", "UTF-16").mkString
+    val content = Source.fromFile("google.csv", "UTF-16").mkString
     val out = parser.output(content)
-    println(out)
+
+    val pw = new PrintWriter("google-out.csv")
+    pw.print(out)
+    pw.close()
   }
 }
