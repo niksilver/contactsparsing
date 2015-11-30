@@ -79,31 +79,31 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
 
-    it ("should accept quoted content with double-double quotes") {
+    it ("should accept quoted content with double-double quotes (and output plain double quotes)") {
       new TestParser {
         val text = """Here "" is a double-double quote"""
-        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here \"\" is a double-double quote"))
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here \" is a double-double quote"))
       }
     }
 
-    it ("should accept quoted content with double-double quotes at the start") {
+    it ("should accept quoted content with double-double quotes at the start (and output plain double quotes)") {
       new TestParser {
         val text = "\"\"Here is a double-double quote"
-        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"\"Here is a double-double quote"))
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"Here is a double-double quote"))
       }
     }
 
-    it ("should accept quoted content with double-double quotes at the end") {
+    it ("should accept quoted content with double-double quotes at the end (and output plain double quotes)") {
       new TestParser {
         val text = "Here is a double-double quote\"\""
-        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here is a double-double quote\"\""))
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here is a double-double quote\""))
       }
     }
 
-    it ("should accept quoted content which is just two double-double quotes") {
+    it ("should accept quoted content which is just two double-double quotes (and output plain double quotes)") {
       new TestParser {
         val text = "\"\"\"\""
-        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"\"\"\""))
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("\"\""))
       }
     }
 
