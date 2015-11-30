@@ -79,6 +79,13 @@ class ParserTest extends FunSpec with ShouldMatchers {
       }
     }
 
+    it ("should accept quoted content with double-double quotes") {
+      new TestParser {
+        val text = """Here "" is a double-double quote"""
+        parseOption(quotedField, "\"" + text + "\"") should equal (Some("Here \"\" is a double-double quote"))
+      }
+    }
+
     it ("should reject multiline content with double quotes") {
       new TestParser {
         val multiline =
