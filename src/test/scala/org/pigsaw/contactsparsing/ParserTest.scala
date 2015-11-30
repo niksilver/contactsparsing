@@ -91,32 +91,6 @@ class ParserTest extends FunSpec with ShouldMatchers {
     }
   }
 
-  describe("tripleQuotedField") {
-    it("should accept quoted content with spaces") {
-      new TestParser {
-        parseOption(tripleQuotedField, "\"\"\"The cat sat on the mat\"\"\"") should equal(Some("The cat sat on the mat"))
-        parseOption(tripleQuotedField, "\"\"\"The rain in Spain...\"\"\"") should equal(Some("The rain in Spain..."))
-      }
-    }
-
-    it("should accept quoted content with quotes") {
-      new TestParser {
-        parseOption(tripleQuotedField, "\"\"\"The cat sa\"t on the mat\"\"\"") should equal(Some("The cat sa\"t on the mat"))
-        parseOption(tripleQuotedField, "\"\"\"The rain in Spain\"...\"\"\"") should equal(Some("The rain in Spain\"..."))
-      }
-    }
-
-    it ("should accept triple-quoted content with newlines and convert newlines to comma-spaces") {
-      new TestParser {
-        val multiline =
-          """One, two,
-            |three, four,
-            |five, six.""".stripMargin
-        parseOption(tripleQuotedField, "\"\"\"" + multiline + "\"\"\"") should equal (Some("One, two,, three, four,, five, six."))
-      }
-    }
-  }
-
   describe("field") {
     it ("should accept a simple field") {
       new TestParser {
@@ -129,13 +103,6 @@ class ParserTest extends FunSpec with ShouldMatchers {
       new TestParser {
         parseOption(field, "\"The cat sat on the mat\"") should equal (Some("The cat sat on the mat"))
         parseOption(field, "\"The rain in Spain...\"") should equal (Some("The rain in Spain..."))
-      }
-    }
-
-    it ("should accept a triple-quoted field") {
-      new TestParser {
-        parseOption(field, "\"\"\"The cat sa\"t on the mat\"\"\"") should equal (Some("The cat sa\"t on the mat"))
-        parseOption(field, "\"\"\"The rain in Spain\"...\"\"\"") should equal (Some("The rain in Spain\"..."))
       }
     }
   }
